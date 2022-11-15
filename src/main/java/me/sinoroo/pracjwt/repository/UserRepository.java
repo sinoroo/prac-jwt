@@ -1,9 +1,8 @@
 package me.sinoroo.pracjwt.repository;
 
+import me.sinoroo.pracjwt.entity.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import me.sinoroo.pracjwt.entity.User;
 
 import java.util.Optional;
 
