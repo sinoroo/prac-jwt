@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import me.sinoroo.pracjwt.service.ResponseService;
+
 import me.sinoroo.pracjwt.dto.LoginDto;
 import me.sinoroo.pracjwt.dto.TokenDto;
 import me.sinoroo.pracjwt.jwt.JwtFilter;
 import me.sinoroo.pracjwt.jwt.TokenProvider;
+import me.sinoroo.pracjwt.model.response.SingleResult;
 
 @RestController
 @RequestMapping("/api")
@@ -25,16 +28,18 @@ public class AuthController {
 
 
     private final TokenProvider tokenProvider;
+    private final ResponseService responseService;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder){
+    public AuthController(TokenProvider tokenProvider, ResponseService responseService, AuthenticationManagerBuilder authenticationManagerBuilder){
         this.tokenProvider = tokenProvider;
+        this.responseService = responseService;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
 
-
-    @PostMapping("/authenticate")
+    /*
+    @PostMapping("/signin")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto){
         UsernamePasswordAuthenticationToken authenticationToken = 
             new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
@@ -48,5 +53,23 @@ public class AuthController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer" + jwt);
 
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+    }
+     */
+
+    @PostMapping("/signin")
+    public SingleResult<TokenDto> login(@Valid @RequestBody LoginDto loginDto){
+        UsernamePasswordAuthenticationToken authenticationToken = 
+            new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+        
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = tokenProvider.createToken(authentication);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer" + jwt);
+
+        //return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return responseService.getSingleResult(new TokenDto(jwt));
     }
 }

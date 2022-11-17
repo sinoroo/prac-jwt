@@ -2,6 +2,8 @@ package me.sinoroo.pracjwt.controller;
 
 import me.sinoroo.pracjwt.dto.UserDto;
 import me.sinoroo.pracjwt.entity.User;
+import me.sinoroo.pracjwt.model.response.SingleResult;
+import me.sinoroo.pracjwt.service.ResponseService;
 import me.sinoroo.pracjwt.service.UserService;
 
 import org.springframework.http.ResponseEntity;
@@ -17,14 +19,24 @@ import java.io.IOException;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
+    private final ResponseService responseService;
 
-    public UserController(UserService userService){
+    public UserController(UserService userService, ResponseService responseService){
         this.userService = userService;
+        this.responseService = responseService;
     }
 
+    /*
     @PostMapping("/signup")
     public ResponseEntity<User> signup(@Valid @RequestBody UserDto userDto){
         return ResponseEntity.ok(userService.signup(userDto));
+    }
+     */
+
+    @PostMapping("/signup")
+    public SingleResult<User> signup(@Valid @RequestBody UserDto userDto){
+        //return ResponseEntity.ok(userService.signup(userDto));
+        return responseService.getSingleResult(userService.signup(userDto));
     }
 
     @GetMapping("/user")
