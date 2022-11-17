@@ -26,13 +26,6 @@ public class UserController {
         this.responseService = responseService;
     }
 
-    /*
-    @PostMapping("/signup")
-    public ResponseEntity<User> signup(@Valid @RequestBody UserDto userDto){
-        return ResponseEntity.ok(userService.signup(userDto));
-    }
-     */
-
     @PostMapping("/signup")
     public SingleResult<User> signup(@Valid @RequestBody UserDto userDto){
         //return ResponseEntity.ok(userService.signup(userDto));

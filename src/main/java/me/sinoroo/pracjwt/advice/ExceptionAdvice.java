@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import me.sinoroo.pracjwt.advice.exception.CDuplicatedNameException;
-import me.sinoroo.pracjwt.advice.exception.CEmailLoginFailedException;
-import me.sinoroo.pracjwt.advice.exception.CUserNotFoundException;
+import me.sinoroo.pracjwt.exception.CAccessDeniedException;
+import me.sinoroo.pracjwt.exception.CAuthenticationEntrypointException;
+import me.sinoroo.pracjwt.exception.CDuplicatedNameException;
+import me.sinoroo.pracjwt.exception.CEmailLoginFailedException;
+import me.sinoroo.pracjwt.exception.CUserNotFoundException;
 import me.sinoroo.pracjwt.model.response.CommonResult;
 import me.sinoroo.pracjwt.service.ResponseService;
 
@@ -62,7 +64,19 @@ public class ExceptionAdvice {
                 Integer.parseInt(getMessage("invalidKey.code")), getMessage("invalidKey.msg"));
     }
 
-    
+    @ExceptionHandler(CAuthenticationEntrypointException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult authenticationEntrypointException(HttpServletRequest request, CAuthenticationEntrypointException e){
+        return responseService.getFailResult(
+            Integer.parseInt(getMessage("authenticationEntrypoint.code")), getMessage("authenticationEntrypoint.msg"));
+    }
+
+    @ExceptionHandler(CAccessDeniedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult accessDeniedException(HttpServletRequest request, CAccessDeniedException e){
+        return responseService.getFailResult(
+            Integer.parseInt(getMessage("accessDenied.code")), getMessage("accessDenied.msg"));
+    }
 
     private String getMessage(String code){
         return getMessage(code, null);

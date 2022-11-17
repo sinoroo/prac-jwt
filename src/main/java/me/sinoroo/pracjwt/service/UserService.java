@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import me.sinoroo.pracjwt.entity.User;
+import me.sinoroo.pracjwt.exception.CUserNotFoundException;
 import me.sinoroo.pracjwt.exception.NotFoundMemberException;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,7 +58,7 @@ public class UserService {
         return UserDto.from(
                 SecurityUtil.getCurrentUsername()
                         .flatMap(userRepository::findOneWithAuthoritiesByUsername)
-                        .orElseThrow(() -> new NotFoundMemberException("Member not found")
+                        .orElseThrow(() -> new CUserNotFoundException("Member not found")
                         ));
     }
 }

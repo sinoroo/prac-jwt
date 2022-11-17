@@ -1,4 +1,4 @@
-package me.sinoroo.pracjwt.advice.exception;
+package me.sinoroo.pracjwt.exception;
 
 public class CEmailLoginFailedException extends RuntimeException{
 
@@ -12,5 +12,9 @@ public class CEmailLoginFailedException extends RuntimeException{
     
     public CEmailLoginFailedException(String message, Throwable cause){
         super(message, cause);
+    }
+
+    public CEmailLoginFailedException(Throwable cause) {
+        super(cause);
     }
 }
