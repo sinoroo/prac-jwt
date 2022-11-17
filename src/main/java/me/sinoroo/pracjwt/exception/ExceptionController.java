@@ -1,5 +1,6 @@
 package me.sinoroo.pracjwt.exception;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,6 @@ public class ExceptionController {
 
     @GetMapping("/accessDenied")
     public CommonResult accessDeniedException(){
-        throw new CAccessDeniedException();
+        throw new AccessDeniedException("");
     }
 }

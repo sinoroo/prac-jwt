@@ -77,7 +77,6 @@ public class SecurityConfig {
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/signin").permitAll()
                 .antMatchers("/api/signup").permitAll()
-                .antMatchers("/exception/**").permitAll()
 
                 .anyRequest().authenticated()
 
