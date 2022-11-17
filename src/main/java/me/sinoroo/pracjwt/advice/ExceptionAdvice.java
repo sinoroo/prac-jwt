@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -77,6 +78,13 @@ public class ExceptionAdvice {
     protected CommonResult accessDeniedException(HttpServletRequest request, AccessDeniedException e){
         return responseService.getFailResult(
             Integer.parseInt(getMessage("accessDenied.code")), getMessage("accessDenied.msg"));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult badCredentialsException(HttpServletRequest request, BadCredentialsException e){
+        return responseService.getFailResult(
+            Integer.parseInt(getMessage("badCredentials.code")), getMessage("badCredentials.msg"));
     }
 
     private String getMessage(String code){

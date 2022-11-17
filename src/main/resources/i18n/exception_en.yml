@@ -38,3 +38,6 @@ duplicatedUser:
 invalidKey:
   code: "-1012"
   msg: "Invalid Key"
+badCredentials:
+  code: "-1013"
+  msg: "Bad Credentials"
