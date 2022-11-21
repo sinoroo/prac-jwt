@@ -16,7 +16,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends BaseTimeEntity{
 
    @Id
    @Column(name = "user_id")

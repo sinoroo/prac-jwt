@@ -4,6 +4,7 @@ import me.sinoroo.pracjwt.jwt.JwtAccessDeniedHandler;
 import me.sinoroo.pracjwt.jwt.JwtAuthenticationEntryPoint;
 import me.sinoroo.pracjwt.jwt.JwtSecurityConfig;
 import me.sinoroo.pracjwt.jwt.TokenProvider;
+import me.sinoroo.pracjwt.service.SecurityService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -24,17 +25,20 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final SecurityService securityService;
 
     public SecurityConfig(
             TokenProvider tokenProvider,
             CorsFilter corsFilter,
             JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
-            JwtAccessDeniedHandler jwtAccessDeniedHandler
+            JwtAccessDeniedHandler jwtAccessDeniedHandler,
+            SecurityService securityService
     ) {
         this.tokenProvider = tokenProvider;
         this.corsFilter = corsFilter;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
+        this.securityService = securityService;
     }
 
     @Bean
@@ -81,7 +85,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
 
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider, securityService));
 
         return httpSecurity.build();
     }
