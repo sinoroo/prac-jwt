@@ -95,7 +95,7 @@ public class TokenProvider implements InitializingBean {
          .setSubject(authentication.getName())
          .claim(AUTHORITIES_KEY, authorities)
          .signWith(key, SignatureAlgorithm.HS512)
-         .setExpiration(new Date(now + this.tokenValidityInMilliseconds))
+         .setExpiration(new Date(now + this.refreshtokenValidityInMilliseconds))
          .compact();
    }
 
