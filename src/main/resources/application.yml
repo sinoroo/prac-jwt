@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: private, local
+    include: private, dev
 
   messages:
     always-use-message-format: false

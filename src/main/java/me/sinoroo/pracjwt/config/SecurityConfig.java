@@ -1,5 +1,6 @@
 package me.sinoroo.pracjwt.config;
 
+import me.sinoroo.pracjwt.entity.Role;
 import me.sinoroo.pracjwt.jwt.JwtAccessDeniedHandler;
 import me.sinoroo.pracjwt.jwt.JwtAuthenticationEntryPoint;
 import me.sinoroo.pracjwt.jwt.JwtSecurityConfig;
@@ -7,6 +8,8 @@ import me.sinoroo.pracjwt.jwt.TokenProvider;
 import me.sinoroo.pracjwt.service.SecurityService;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.expression.SecurityExpressionHandler;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,7 +17,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
@@ -78,6 +83,7 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
+                .expressionHandler(webSecurityExpressionHandler())
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/signin").permitAll()
                 .antMatchers("/api/signup").permitAll()
@@ -88,5 +94,18 @@ public class SecurityConfig {
                 .apply(new JwtSecurityConfig(tokenProvider, securityService));
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    public RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy(Role.getRoleHierarchy());
+        return roleHierarchy;
+    }
+
+    private SecurityExpressionHandler<FilterInvocation> webSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
+        defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
+        return defaultWebSecurityExpressionHandler;
     }
 }
